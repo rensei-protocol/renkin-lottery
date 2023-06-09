@@ -1,22 +1,11 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
-
-  const lockedAmount = ethers.parseEther("0.001");
-
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  const weth = await ethers.deployContract("WETH9");
+  // todo reandom number generator address
+  const renkinLottery = await ethers.deployContract("RenkinLottery", [weth.target,weth.target]);
+  await renkinLottery.waitForDeployment();
+  console.log("RenkinLottery address: ", renkinLottery.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
