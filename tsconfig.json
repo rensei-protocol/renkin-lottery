@@ -1,11 +1,36 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "es5",
+    "module": "ESNext",
     "strict": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@contracts": ["./contract-types"],
+      "@helpers/*": ["./helpers/*"]
+    },
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.collection"
+    ]
+  },
+  "include": [
+    "hardhat.config.ts",
+    "./scripts",
+    "./tasks",
+    "./test",
+    "./typings/**/*.d.ts",
+    "./contract-types/**/*.ts"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
 }
