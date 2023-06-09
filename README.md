@@ -36,6 +36,9 @@ function claimTickets(
 
 ## Random number generator
 
+1. https://docs.chain.link/vrf/v2/direct-funding
+2. https://docs.chain.link/vrf/v2/direct-funding/supported-networks
+
 ## Deploy
 
 ```javascript
