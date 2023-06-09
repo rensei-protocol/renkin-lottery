@@ -17,7 +17,7 @@ function buyTickets(
 ) external override notContract nonReentrant
 ```
 
-###
+### claimTickets
 
 ```solidity
 /**
