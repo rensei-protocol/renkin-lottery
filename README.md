@@ -1,13 +1,43 @@
-# Sample Hardhat Project
+# Renkin Lottery
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+## User Inerface
 
-Try running some of the following tasks:
+### buyTickets
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+```solidity
+/**
+    * @notice Buy tickets for the current lottery
+    * @param _lotteryId: lotteryId
+    * @param _ticketNumbers: array of ticket numbers between 1,000,000 and 1,999,999
+    * @dev Callable by users
+    */
+function buyTickets(
+    uint256 _lotteryId,
+    uint32[] calldata _ticketNumbers
+) external override notContract nonReentrant
+```
+
+###
+
+```solidity
+/**
+    * @notice Claim a set of winning tickets for a lottery
+    * @param _lotteryId: lottery id
+    * @param _ticketIds: array of ticket ids
+    * @param _brackets: array of brackets for the ticket ids
+    * @dev Callable by users only, not contract!
+    */
+function claimTickets(
+    uint256 _lotteryId,
+    uint256[] calldata _ticketIds,
+    uint32[] calldata _brackets
+) external override notContract nonReentrant
+```
+
+## Random number generator
+
+## Deploy
+
+```javascript
+yarn hardhart run scripts/deploy.ts --network mainnet
 ```
