@@ -6,8 +6,10 @@ async function main() {
   
   const renkinLotteryAddress= "0x61EE99710796728029D116A2a1DF70C61aE94ab3";
   const RenkinLottery = await ethers.getContractAt("RenkinLottery", renkinLotteryAddress);
-  const endTime = Date.now() + 864000;
-  const priceTicketInWeth = 100000000;
+  const endTime = Math.floor(Date.now() / 1000) + 18000
+
+  console.log("endTime: ", endTime);
+  const priceTicketInWeth = ethers.parseEther("0.005")
   const discountDivisor = 300;
   const rewardsBreakdown = [100,500,1000,2000,3000,3400];
   const treasuryFee = 1000;
