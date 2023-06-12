@@ -7,7 +7,9 @@
   "license": "MIT",
   "scripts": {
     "compile": "yarn hardhat compile",
-    "prettier": "prettier --write 'contracts/**/*.sol'"
+    "format": "yarn format-sol && yarn format-js",
+    "format-sol": "prettier --write 'contracts/**/*.sol'",
+    "format-js": "prettier --config .prettierrc.js.json --write 'scripts/**/*.ts'"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
