@@ -1,28 +1,18 @@
 import { ethers } from "hardhat";
 
 async function main() {
+  const [owner]= await ethers.getSigners();
+  console.log("owner: ", owner.address);
+  console.log("Start deploying mock weth contract");
   const weth = await ethers.deployContract("WETH9");
   await weth.waitForDeployment();
   console.log("WETH Address: ", weth.target);
 
   // mock coordinator
+  console.log("Start deploying VRFCoordinatorV2Mock")
   const mockCoordinator = await ethers.deployContract("VRFCoordinatorV2Mock",["100000000000000000","1000000000"]);
   await mockCoordinator.waitForDeployment();
   console.log("VRFCoordinatorV2Mock: ", mockCoordinator.target);
-
-  // create subscription
-  await mockCoordinator.createSubscription();
-
-  // check subscription
-  const sub = await mockCoordinator.getSubscription(1);
-  console.log("subscription", sub);
-
-  // fund subscription
-  await mockCoordinator.fundSubscription(1,"1000000000000000000");
-
-  // check subscription again
-  const subAfter = await mockCoordinator.getSubscription(1);
-  console.log("subscription after funding: ", subAfter);
 
   // https://docs.chain.link/vrf/v2/direct-funding/supported-networks
   // const vrfCoordinatorAddress = "0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D";
