@@ -1,9 +1,14 @@
 import { ethers } from 'hardhat';
+import { config as dotenvConfig } from 'dotenv';
+import { resolve } from 'path';
 
 async function main() {
+  dotenvConfig({ path: resolve(__dirname, './.env') });
+  const MockCoordinatorAddress = process.env.VRFCoordinatorV2Mock || '';
+
   const MockCoordinator = await ethers.getContractAt(
     'VRFCoordinatorV2Mock',
-    '0x695a1207cdec657Ea8E268b3B7CAE1C12A8BBC18'
+    MockCoordinatorAddress
   );
   const sub = await MockCoordinator.getSubscription('1');
   console.log('sub: ', sub);

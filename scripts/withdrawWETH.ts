@@ -1,13 +1,14 @@
 import { ethers } from 'hardhat';
+import { config as dotenvConfig } from 'dotenv';
+import { resolve } from 'path';
 
 async function main() {
+  dotenvConfig({ path: resolve(__dirname, './.env') });
+  const wethAddress = process.env.WETH || '';
   const [owner] = await ethers.getSigners();
   console.log('owner: ', owner.address);
 
-  const WETH = await ethers.getContractAt(
-    'WETH9',
-    '0xf853F41c9D13B99ED8f23F086fBe226404745ACd'
-  );
+  const WETH = await ethers.getContractAt('WETH9', wethAddress);
   const balance = await WETH.balanceOf(owner.address);
   if (balance != 0) {
     console.log('start withdraw: ', balance);
