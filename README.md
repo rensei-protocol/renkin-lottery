@@ -34,6 +34,11 @@ function claimTickets(
 ) external override notContract nonReentrant
 ```
 
+## Workflow
+
+1. startLottery
+2. buyTickets
+
 ## Random number generator
 
 1. https://docs.chain.link/vrf/v2/direct-funding
