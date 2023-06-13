@@ -106,7 +106,7 @@ describe('Lottery', function () {
       // buy tickets
       await renkinLottery.buyTickets(
         '1',
-        [1000001, 1000001, 1000001, 1000001, 1000001, 1000001]
+        [1016461, 1016461, 1016461, 1016461, 1016461, 1016461]
       );
 
       // fast forward
@@ -129,21 +129,31 @@ describe('Lottery', function () {
       console.log('lottery: ', l);
 
       // view numbers
-      const n = await renkinLottery.viewNumbersAndStatusesForTicketIds([0]);
+      const n = await renkinLottery.viewNumbersAndStatusesForTicketIds([
+        0, 1, 2, 3, 4, 5,
+      ]);
       console.log('number: ', n);
 
       // view rewards
-      for (let i = 0; i < 6; i++) {
-        console.log(
-          'rewards %d : ',
-          i,
-          await renkinLottery.viewRewardsForTicketId('1', '0', i)
-        );
+      for (let bracket = 0; bracket < 6; bracket++) {
+        console.log('\n');
+        console.log('bracket number: %d', bracket);
+        for (let ticket = 0; ticket < 6; ticket++) {
+          console.log(
+            'rewards for ticket %d : ',
+            ticket,
+            await renkinLottery.viewRewardsForTicketId('1', ticket, bracket)
+          );
+        }
       }
 
       // claim tickets
       const wethBalanceBefore = await weth.balanceOf(owner.address);
-      await renkinLottery.claimTickets(1, [0], [0]);
+      await renkinLottery.claimTickets(
+        1,
+        [0, 1, 2, 3, 4, 5],
+        [3, 3, 3, 3, 3, 3]
+      );
       const wethBalanceAfter = await weth.balanceOf(owner.address);
       const increased = wethBalanceAfter - wethBalanceBefore;
       console.log(

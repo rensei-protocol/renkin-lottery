@@ -64,6 +64,13 @@ discountDivisor: 300
 priceForBulkTickets = 0.05 weth * 6 * (300 + 1 - 6) / 300 = 0.295
 ```
 
+### How rewards distribution works
+
+1. User buys one ticket, get a random number N
+2. Contract generates 6 numbers from N, each for one bracket (total 6)
+3. Contract draw result from chainlink's VRF random number, each bracket gets one number
+4. Contract compares user's 6 numbers with brackets'6 numbers, base on rewards breakdown, get rewards result
+
 ## Random number generator
 
 https://docs.chain.link/vrf/v2/subscription
