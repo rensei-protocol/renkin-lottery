@@ -9,7 +9,8 @@ async function main() {
     'VRFCoordinatorV2Mock',
     MockCoordinatorAddress
   );
-  await MockCoordinator.createSubscription();
+  const txn = await MockCoordinator.createSubscription();
+  await txn.wait();
 }
 
 main().catch((error) => {

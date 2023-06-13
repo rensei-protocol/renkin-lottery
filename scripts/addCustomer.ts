@@ -5,14 +5,12 @@ import { resolve } from 'path';
 async function main() {
   dotenvConfig({ path: resolve(__dirname, './.env') });
   const MockCoordinatorAddress = process.env.VRFCoordinatorV2Mock || '';
+  const renkinLotteryAddress = process.env.RENKIN_LOTTERY_ADDRESS || '';
   const MockCoordinator = await ethers.getContractAt(
     'VRFCoordinatorV2Mock',
     MockCoordinatorAddress
   );
-  const txn = await MockCoordinator.fundSubscription(
-    '1',
-    '1000000000000000000'
-  );
+  const txn = await MockCoordinator.addConsumer('1', renkinLotteryAddress);
   await txn.wait();
 }
 

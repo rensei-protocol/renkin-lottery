@@ -4,14 +4,15 @@ import { resolve } from 'path';
 
 async function main() {
   dotenvConfig({ path: resolve(__dirname, './.env') });
-  const renkinLotteryAddress = process.env.RENKIN_LOTTERY_ADDRESS || '';
-  const [owner] = await ethers.getSigners();
-  console.log('owner: ', owner.address);
-  const RenkinLottery = await ethers.getContractAt(
-    'RenkinLottery',
-    renkinLotteryAddress
+  const RandomNumberGeneratorAddress = process.env.RandomNumberGenerator || '';
+
+  const RandomNumberGenerator = await ethers.getContractAt(
+    'RandomNumberGenerator',
+    RandomNumberGeneratorAddress
   );
-  const txn = await RenkinLottery.closeLottery('1');
+  const txn = await RandomNumberGenerator.setKeyHash(
+    '0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc'
+  );
   await txn.wait();
 }
 

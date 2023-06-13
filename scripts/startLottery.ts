@@ -19,13 +19,14 @@ async function main() {
   const discountDivisor = 300;
   const rewardsBreakdown = [100, 500, 1000, 2000, 3000, 3400];
   const treasuryFee = 1000;
-  await RenkinLottery.startLottery(
+  const txn = await RenkinLottery.startLottery(
     endTime,
     priceTicketInWeth,
     discountDivisor,
     rewardsBreakdown,
     treasuryFee
   );
+  await txn.wait();
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -9,7 +9,8 @@
     "compile": "yarn hardhat compile",
     "format": "yarn format-sol && yarn format-js",
     "format-sol": "prettier --write 'contracts/**/*.sol'",
-    "format-js": "prettier --config .prettierrc.js.json --write 'scripts/**/*.ts'"
+    "format-js": "prettier --config .prettierrc.js.json --write 'scripts/**/*.ts' 'test/**/*.ts' ",
+    "test": "yarn hardhat test"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",

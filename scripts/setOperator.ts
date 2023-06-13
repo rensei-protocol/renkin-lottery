@@ -12,11 +12,12 @@ async function main() {
     'RenkinLottery',
     renkinLotteryAddress
   );
-  await RenkinLottery.setOperatorAndTreasuryAndInjectorAddresses(
+  const txn = await RenkinLottery.setOperatorAndTreasuryAndInjectorAddresses(
     owner.address,
     owner.address,
     owner.address
   );
+  await txn.wait();
 }
 
 main().catch((error) => {

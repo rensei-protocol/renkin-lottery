@@ -36,10 +36,11 @@ async function main() {
     'RenkinLottery',
     renkinLotteryAddress
   );
-  await RenkinLottery.buyTickets(
+  const txn = await RenkinLottery.buyTickets(
     '1',
     [1000000, 1000000, 1000000, 1000000, 1000000, 1000000]
   );
+  await txn.wait();
 }
 
 main().catch((error) => {

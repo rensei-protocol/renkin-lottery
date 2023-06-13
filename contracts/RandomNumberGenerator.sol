@@ -1,60 +1,63 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import {IRandomNumberGenerator} from "./interface/IRandomNumberGenerator.sol";
+import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
+import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {VRFConsumerBase} from "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IRenkinLottery} from "./interface/IRenkinLottery.sol";
+import {IRandomNumberGenerator} from "./interface/IRandomNumberGenerator.sol";
+import "hardhat/console.sol";
 
 contract RandomNumberGenerator is
-    IRandomNumberGenerator,
+    VRFConsumerBaseV2,
     Ownable,
-    VRFConsumerBase
+    IRandomNumberGenerator
 {
-    using SafeERC20 for IERC20;
+    VRFCoordinatorV2Interface immutable COORDINATOR;
+    uint64 immutable subscriptionId;
 
-    address public pancakeSwapLottery;
+    // Depends on the number of requested values that you want sent to the
+    // fulfillRandomWords() function. Storing each word costs about 20,000 gas,
+    // so 100,000 is a safe default for this example contract. Test and adjust
+    // this limit based on the network that you select, the size of the request,
+    // and the processing of the callback request in the fulfillRandomWords()
+    // function.
+    uint32 constant CALLBACK_GAS_LIMIT = 100000;
+
+    // The default is 3, but you can set this higher.
+    uint16 constant REQUEST_CONFIRMATIONS = 3;
+
+    // For this example, retrieve 1 random values in one request.
+    // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
+    uint32 constant NUM_WORDS = 1;
+
+    uint256 public requestId;
+    address public renkinLottery;
     bytes32 public keyHash;
-    bytes32 public latestRequestId;
     uint32 public randomResult;
-    uint256 public fee;
     uint256 public latestLotteryId;
 
-    /**
-     * @notice Constructor
-     * @dev RandomNumberGenerator must be deployed before the lottery.
-     * Once the lottery contract is deployed, setLotteryAddress must be called.
-     * https://docs.chain.link/docs/vrf-contracts/
-     * @param _vrfCoordinator: address of the VRF coordinator
-     * @param _linkToken: address of the LINK token
-     */
     constructor(
+        uint64 _subscriptionId,
         address _vrfCoordinator,
-        address _linkToken
-    ) VRFConsumerBase(_vrfCoordinator, _linkToken) {
-        //
+        bytes32 _keyHash
+    ) VRFConsumerBaseV2(_vrfCoordinator) {
+        COORDINATOR = VRFCoordinatorV2Interface(_vrfCoordinator);
+        subscriptionId = _subscriptionId;
+        keyHash = _keyHash;
     }
 
-    /**
-     * @notice Request randomness from a user-provided seed
-     * @param _seed: seed provided by the PancakeSwap lottery
-     */
-    function getRandomNumber(uint256 _seed) external override {
-        require(msg.sender == pancakeSwapLottery, "Only PancakeSwapLottery");
+    function getRandomNumber() external override {
+        require(msg.sender == renkinLottery, "Only renkinLottery");
         require(keyHash != bytes32(0), "Must have valid key hash");
-        require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK tokens");
-        //todo check this
-        latestRequestId = requestRandomness(keyHash, _seed);
-    }
 
-    /**
-     * @notice Change the fee
-     * @param _fee: new fee (in LINK)
-     */
-    function setFee(uint256 _fee) external onlyOwner {
-        fee = _fee;
+        requestId = COORDINATOR.requestRandomWords(
+            keyHash,
+            subscriptionId,
+            REQUEST_CONFIRMATIONS,
+            CALLBACK_GAS_LIMIT,
+            NUM_WORDS
+        );
     }
 
     /**
@@ -65,25 +68,8 @@ contract RandomNumberGenerator is
         keyHash = _keyHash;
     }
 
-    /**
-     * @notice Set the address for the PancakeSwapLottery
-     * @param _pancakeSwapLottery: address of the PancakeSwap lottery
-     */
-    function setLotteryAddress(address _pancakeSwapLottery) external onlyOwner {
-        pancakeSwapLottery = _pancakeSwapLottery;
-    }
-
-    /**
-     * @notice It allows the admin to withdraw tokens sent to the contract
-     * @param _tokenAddress: the address of the token to withdraw
-     * @param _tokenAmount: the number of token amount to withdraw
-     * @dev Only callable by owner.
-     */
-    function withdrawTokens(
-        address _tokenAddress,
-        uint256 _tokenAmount
-    ) external onlyOwner {
-        IERC20(_tokenAddress).safeTransfer(address(msg.sender), _tokenAmount);
+    function setLotteryAddress(address _renkinLottery) external onlyOwner {
+        renkinLottery = _renkinLottery;
     }
 
     /**
@@ -103,13 +89,12 @@ contract RandomNumberGenerator is
     /**
      * @notice Callback function used by ChainLink's VRF Coordinator
      */
-    function fulfillRandomness(
-        bytes32 requestId,
-        uint256 randomness
+    function fulfillRandomWords(
+        uint256 _requestId,
+        uint256[] memory _randomWords
     ) internal override {
-        require(latestRequestId == requestId, "Wrong requestId");
-        randomResult = uint32(1000000 + (randomness % 1000000));
-        latestLotteryId = IRenkinLottery(pancakeSwapLottery)
-            .viewCurrentLotteryId();
+        require(requestId == _requestId, "Wrong requestId");
+        randomResult = uint32(1000000 + (_randomWords[0] % 1000000));
+        latestLotteryId = IRenkinLottery(renkinLottery).viewCurrentLotteryId();
     }
 }

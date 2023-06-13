@@ -2,6 +2,43 @@
 pragma solidity ^0.8.9;
 
 interface IRenkinLottery {
+    event AdminTokenRecovery(address token, uint256 amount);
+    event LotteryClose(
+        uint256 indexed lotteryId,
+        uint256 firstTicketIdNextLottery
+    );
+    event LotteryInjection(uint256 indexed lotteryId, uint256 injectedAmount);
+    event LotteryOpen(
+        uint256 indexed lotteryId,
+        uint256 startTime,
+        uint256 endTime,
+        uint256 priceTicketInWeth,
+        uint256 firstTicketId,
+        uint256 injectedAmount
+    );
+    event LotteryNumberDrawn(
+        uint256 indexed lotteryId,
+        uint256 finalNumber,
+        uint256 countWinningTickets
+    );
+    event NewOperatorAndTreasuryAndInjectorAddresses(
+        address operator,
+        address treasury,
+        address injector
+    );
+    event NewRandomGenerator(address indexed randomGenerator);
+    event TicketsPurchase(
+        address indexed buyer,
+        uint256 indexed lotteryId,
+        uint256 numberTickets
+    );
+    event TicketsClaim(
+        address indexed claimer,
+        uint256 amount,
+        uint256 indexed lotteryId,
+        uint256 numberTickets
+    );
+
     /**
      * @notice Buy tickets for the current lottery
      * @param _lotteryId: lotteryId

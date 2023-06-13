@@ -36,13 +36,37 @@ function claimTickets(
 
 ## Workflow
 
-1. startLottery
-2. buyTickets
+* deploy
+* setOperator
+* setLottery
+* startLottery
+* buyTickets
+* closeLottery
+* createSubscription
+* fundSubscription
+* addCustomer
+* draw
+* claim
+
+## Q&A
+
+### How to calculate total price for ticket
+
+```js
+priceForBulkTickets = priceTicket * numberTickets * (discountDivisor + 1 - numberTickets) / discountDivisor
+
+e.g.
+
+priceTicket: 0.05 weth
+numberTickets: 6
+discountDivisor: 300
+
+priceForBulkTickets = 0.05 weth * 6 * (300 + 1 - 6) / 300 = 0.295
+```
 
 ## Random number generator
 
-1. https://docs.chain.link/vrf/v2/direct-funding
-2. https://docs.chain.link/vrf/v2/direct-funding/supported-networks
+https://docs.chain.link/vrf/v2/subscription
 
 ## Deploy
 
