@@ -5,7 +5,7 @@ import { resolve } from 'path';
 async function main() {
   dotenvConfig({ path: resolve(__dirname, './.env') });
   const MockCoordinatorAddress = process.env.VRFCoordinatorV2Mock || '';
-  const renkinLotteryAddress = process.env.RENKIN_LOTTERY_ADDRESS || '';
+  const renkinLotteryAddress = process.env.RenkinLotteryAddress || '';
   const MockCoordinator = await ethers.getContractAt(
     'VRFCoordinatorV2Mock',
     MockCoordinatorAddress

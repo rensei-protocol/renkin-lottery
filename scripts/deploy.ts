@@ -1,6 +1,11 @@
 import { ethers } from 'hardhat';
+import { config as dotenvConfig } from 'dotenv';
+import { resolve } from 'path';
 
 async function main() {
+  dotenvConfig({ path: resolve(__dirname, './.env') });
+  const keyHash = process.env.KeyHash || '';
+  const subscriptionId = process.env.SubscriptionId || 0;
   const [owner] = await ethers.getSigners();
   console.log('owner: ', owner.address);
   console.log('Start deploying mock weth contract');
@@ -9,21 +14,20 @@ async function main() {
   console.log('WETH Address: ', weth.target);
 
   // mock coordinator
-  console.log('Start deploying VRFCoordinatorV2Mock');
-  const mockCoordinator = await ethers.deployContract('VRFCoordinatorV2Mock', [
-    '100000000000000000',
-    '1000000000',
-  ]);
-  await mockCoordinator.waitForDeployment();
-  console.log('VRFCoordinatorV2Mock: ', mockCoordinator.target);
+  // console.log('Start deploying VRFCoordinatorV2Mock');
+  // const mockCoordinator = await ethers.deployContract('VRFCoordinatorV2Mock', [
+  //   '100000000000000000',
+  //   '1000000000',
+  // ]);
+  // await mockCoordinator.waitForDeployment();
+  // console.log('VRFCoordinatorV2Mock: ', mockCoordinator.target);
 
-  // https://docs.chain.link/vrf/v2/direct-funding/supported-networks
-  // const vrfCoordinatorAddress = "0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D";
-  const vrfCoordinatorAddress = mockCoordinator.target;
-  const linkTokenAddress = '0x326C977E6efc84E512bB9C30f76E30c160eD06FB';
+  // https://vrf.chain.link/goerli
+  const vrfCoordinatorAddress = '0x2ca8e0c643bde4c2e08ab1fa0da3401adad7734d';
+  // const vrfCoordinatorAddress = mockCoordinator.target;
   const randomNumberGenerator = await ethers.deployContract(
     'RandomNumberGenerator',
-    [vrfCoordinatorAddress, linkTokenAddress]
+    [subscriptionId, vrfCoordinatorAddress, keyHash]
   );
   await randomNumberGenerator.waitForDeployment();
   console.log('RandomNumberGenerator Address: ', randomNumberGenerator.target);

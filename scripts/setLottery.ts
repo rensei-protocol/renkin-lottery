@@ -5,7 +5,7 @@ import { resolve } from 'path';
 async function main() {
   dotenvConfig({ path: resolve(__dirname, './.env') });
   const RandomNumberGeneratorAddress = process.env.RandomNumberGenerator || '';
-  const renkinLotteryAddress = process.env.RENKIN_LOTTERY_ADDRESS || '';
+  const renkinLotteryAddress = process.env.RenkinLotteryAddress || '';
 
   const RandomNumberGenerator = await ethers.getContractAt(
     'RandomNumberGenerator',
@@ -14,6 +14,7 @@ async function main() {
   const txn = await RandomNumberGenerator.setLotteryAddress(
     renkinLotteryAddress
   );
+  console.log(txn.hash);
   await txn.wait();
 }
 

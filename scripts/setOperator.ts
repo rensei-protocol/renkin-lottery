@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 async function main() {
   dotenvConfig({ path: resolve(__dirname, './.env') });
-  const renkinLotteryAddress = process.env.RENKIN_LOTTERY_ADDRESS || '';
+  const renkinLotteryAddress = process.env.RenkinLotteryAddress || '';
 
   const [owner] = await ethers.getSigners();
   console.log('owner: ', owner.address);
@@ -17,6 +17,7 @@ async function main() {
     owner.address,
     owner.address
   );
+  console.log(txn.hash);
   await txn.wait();
 }
 
