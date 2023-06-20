@@ -1,5 +1,11 @@
 # Renkin Lottery
 
+## Contract Address (Goerli Testnet):
+
+1. RandomNumberGenerator 0x6f10c3caf839d6b2727a16581c97ccedc1735a5d
+2. VRF Coordinator 0x271682deb8c4e0901d1a1550ad2e64d568e69909
+3. RenkinLottery 0x89C46D6cEADdbAa9FDd1BCF2F4B06C8F1412a17e
+
 ## User Inerface
 
 ### buyTickets
