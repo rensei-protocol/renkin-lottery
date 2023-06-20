@@ -46,13 +46,13 @@ function claimTickets(
 * setOperator
 * setLottery
 * startLottery
-* buyTickets
+* buyTickets (user)
 * closeLottery
 * createSubscription
 * fundSubscription
 * addCustomer
 * draw
-* claim
+* claimTickets (user)
 
 ## Q&A
 
